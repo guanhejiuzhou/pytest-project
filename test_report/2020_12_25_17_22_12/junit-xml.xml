@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="5" time="99.046" timestamp="2020-12-25T17:22:13.080106" hostname="LAPTOP-ALPNKV55"><testcase classname="test_dir.test_baidu_search.TestBaiduSearch" name="test_baidu_search_pytest_case" time="15.301" /><testcase classname="test_dir.test_baidu_search.TestBaiduSearch" name="test_baidu_search_selenium_case" time="4.757" /><testcase classname="test_dir.test_baidu_search.TestSearchSetting" name="test_baidu_search_setting_case" time="62.179"><failure message="selenium.common.exceptions.NoSuchElementException: Message: ❌ Find 0 elements through: link text=设置">self = &lt;test_dir.test_baidu_search.TestSearchSetting object at 0x000001AA8B4A1A00&gt;
+browser = &lt;selenium.webdriver.chrome.webdriver.WebDriver (session="4aa16a4182e7b0b7eab6b21b44ada1ab")&gt;
+base_url = 'https://www.baidu.com'
+
+    def test_baidu_search_setting_case(self, browser, base_url):
+        """
+        名称：百度搜索设置
+        步骤：打开浏览器-点击设置链接-在下拉框中点击‘选择搜索’-点击保存设置-对弹出警告框保存
+        预期结果：检查是否弹出提示框
+        :param browser:
+        :param base_url:
+        :return:
+        """
+        page = BaiduSearchPage(browser)
+        page.get(base_url)
+&gt;       page.settings.click()
+
+test_dir\test_baidu_search.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+D:\Python\lib\site-packages\poium\page_objects.py:392: in click
+    elem = self.__get_element(self.k, self.v)
+D:\Python\lib\site-packages\poium\page_objects.py:309: in __get_element
+    self.__find_element((By.LINK_TEXT, value))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;poium.page_objects.NewPageElement object at 0x000001AA8BFA6550&gt;
+elem = ('link text', '设置')
+
+    def __find_element(self, elem):
+        """
+        Find if the element exists.
+        """
+        for i in range(self.timeout):
+            elems = Browser.driver.find_elements(by=elem[0], value=elem[1])
+            if len(elems) == 1:
+                logging.info("✅ Find element: {by}={value} ".format(
+                    by=elem[0], value=elem[1]))
+                break
+            elif len(elems) &gt; 1:
+                logging.info("❓ Find {n} elements through: {by}={value}".format(
+                    n=len(elems), by=elem[0], value=elem[1]))
+                break
+            else:
+                sleep(1)
+        else:
+            error_msg = "❌ Find 0 elements through: {by}={value}".format(by=elem[0], value=elem[1])
+            logging.error(error_msg)
+&gt;           raise NoSuchElementException(error_msg)
+E           selenium.common.exceptions.NoSuchElementException: Message: ❌ Find 0 elements through: link text=设置
+
+D:\Python\lib\site-packages\poium\page_objects.py:288: NoSuchElementException</failure></testcase><testcase classname="test_dir.test_baidu_search_optimize" name="test_baidu_search[1-pytest]" time="5.339" /><testcase classname="test_dir.test_baidu_search_optimize" name="test_baidu_search[2-python]" time="9.925" /></testsuite></testsuites>
