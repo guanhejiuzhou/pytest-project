@@ -60,6 +60,7 @@ class Log():
         self._console('error', message)
 
 
+log = Log().logger
 if __name__ == '__main__':
     log = Log()
     log.info('测试')
