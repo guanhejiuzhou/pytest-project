@@ -3,7 +3,9 @@
 selenium基类
 存放selenium基类的封装方法
 """
+from selenium.webdriver import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import ElementNotVisibleException
@@ -173,13 +175,17 @@ class BasePage(object):
         """
         return self.driver.page_source
 
-    def refresh(self):
+    def refresh(self, url=None):
         """
-        刷新页面F5
+        刷新页面F5  如果url是空值，就刷新当前页面，否则就刷新指定页面
+        :param url: 默认值是空的
         :return:
         """
-        self.driver.refresh()
-        self.driver.implicitly_wait(30)
+        if url is None:
+            self.driver.refresh()
+            self.driver.implicitly_wait(30)
+        else:
+            self.driver.get(url)
 
     def is_selected(self, locator, Type=''):
         """
@@ -334,4 +340,150 @@ class BasePage(object):
         """
         js = "window.scrollTo(%s, document.body.scrollHeight)" % x
         self.driver.execute_script(js)
+
+    def select_by_index(self, locator, index=0):
+        """
+        通过索引定位选择，index是索引第几个，从0开始，默认第一个
+        :param locator:
+        :param index:
+        :return:
+        """
+        if not isinstance(locator, tuple):
+            raise LocatorTypeError(log.info("参数类型错误"))
+        element = self.find_element(locator)
+        Select(element).select_by_index(index)
+
+    def select_by_value(self, locator, value):
+        """
+        通过value属性选择
+        :param locator:
+        :param value:
+        :return:
+        """
+        if not isinstance(locator, tuple):
+            raise LocatorTypeError(log.info("参数类型错误"))
+        element = self.find_element(locator)
+        Select(element).select_by_value(value)
+
+    def select_by_text(self, locator, text):
+        """
+        通过文本值定位
+        :param locator:
+        :param text:
+        :return:
+        """
+        element = self.find_element(locator)
+        Select(element).select_by_visible_text(text)
+
+    def switch_iframe(self, id_index_locator):
+        """
+        切换iframe
+        :param id_index_locator:
+        :return:
+        """
+        try:
+            if isinstance(id_index_locator, int):
+                self.driver.switch_to.frame(id_index_locator)
+            elif isinstance(id_index_locator, str):
+                self.driver.switch_to.frame(id_index_locator)
+            elif isinstance(id_index_locator, tuple):
+                ele = self.find_element(id_index_locator)
+                self.driver.switch_to.frame(ele)
+        except:
+            log.info("iframe切换异常")
+
+    def switch_to_default(self):
+        """
+        切换到默认窗口
+        :return:
+        """
+        self.driver.switch_to.default_content()
+
+    def switch_to_window_by_title(self, title):
+        """
+        切换不同页面窗口
+        :param title:
+        :return:
+        """
+        for handle in self.driver.window_handles:
+            self.driver.switch_to.window(handle)
+            if self.driver.title == title:
+                break
+            self.driver.switch_to.default_content()
+
+    def move_to_element(self, locator):
+        """
+        鼠标悬停操作
+        :param locator:
+        :return:
+        """
+        try:
+            ele = self.find_element(locator)
+            ActionChains(self.driver).move_to_element(ele).perform()
+        except:
+            log.info("鼠标悬停操作失败")
+            return False
+
+    def _locate_elements(self, locator):
+        """
+        通过选择器定位元素
+        选择器应通过带有"i,xxx"的示例传递
+        "x, //*[@id='langs']/button"
+        :param locator:
+        :return:
+        """
+        if locator is not None:
+            elements = self.driver.find_elements(*locator)
+        else:
+            raise NameError("请输入目标元素的有效定位器")
+        return elements
+
+    def right_click(self, locator):
+        """
+        鼠标右击
+        :param locator:
+        :return:
+        """
+        el = self.find_element(locator)
+        ActionChains(self.driver).context_click(el).perform()
+
+    def double_click(self, selector):
+        """
+        鼠标双击
+        :param selector:想要双击的元素，元素定位
+        :return:
+        """
+        ele = self._locate_elements(selector)
+        ActionChains(self.driver).double_click(ele).perform()
+
+    def drag_element(self, source, target):
+        """
+        拖拽元素
+        :param source:来源
+        :param target:目标
+        :return:
+        """
+        el_source = self.find_element(source)
+        el_target = self.find_element(target)
+
+        if self.driver.w3c:
+            ActionChains(self.driver).drag_and_drop(el_source, el_target).perform()
+        else:
+            ActionChains(self.driver).click_and_hold(el_source).perform()
+            ActionChains(self.driver).move_to_element(el_target).perform()
+            ActionChains(self.driver).release(el_target).perform()
+
+    def upload_input(self, locator, file):
+        """
+        上传文件（标签为input类型，此类型最常见，最简单）
+        :param locator:上传按钮定位
+        :param file:将要上传的文件（绝对路径）
+        :return:
+        """
+        self.find_element(locator).send_keys(file)
+
+
+if __name__ == "__main__":
+    pass
+
 
