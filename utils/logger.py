@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import logging, time
 import os
-import getPathInfo
+from utils import getPathInfo
 
 # 获取本地路径
 path = getPathInfo.get_path()
