@@ -1,14 +1,40 @@
-import sys
-from time import sleep
+# -*- coding:utf-8 -*-
+import re
 import pytest
-from os.path import dirname, abspath
-from page.baiduSearch_page import BaiduSearchPage
+from utils.logger import log
+from common.readconfig import ini
+from page_object.baiduSearch_page import BaiduSearchPage
 
-sys.path.insert(0, dirname(dirname(abspath(__file__))))
+
+# sys.path.insert(0, dirname(dirname(abspath(__file__))))
 
 
 class TestBaiduSearch:
     """ 百度搜索 """
+
+    # pytest.fixture()实现了和unittest的setup、teardown一样的前置启动、后置清理的装饰器
+    @pytest.fixture(scope='function', autouse=True)
+    def open_baidu(self, drivers):
+        """打开百度"""
+        baidusearch = BaiduSearchPage(drivers)
+        baidusearch.get_url(ini.url)
+
+    def test_baidu_search_selenium_case(self, drivers):
+        """
+        名称：百度搜索selenium关键字
+        步骤：打开浏览器-输入selenium-点击搜索按钮
+        预期结果：检查搜索结果是否包含selenium关键字
+        :param drivers:
+        :return:
+        """
+        baidusearch = BaiduSearchPage(drivers)
+        baidusearch.input_search("selenium")
+        baidusearch.click()
+        # 获取页面源代码
+        result = re.search(r'selenium', baidusearch.get_source)
+        log.info(result)
+        assert result
+
 
     def test_baidu_search_pytest_case(self, browser, base_url):
         """
@@ -70,4 +96,3 @@ class TestSearchSetting:
 
 if __name__ == '__main__':
     pytest.main(["-v", "-s", "test_baidu_search.py"])
-

@@ -3,7 +3,7 @@ import sys
 import json
 from time import sleep
 import pytest
-from page.baiduSearch_page import BaiduSearchPage
+from page_object.baiduSearch_page import BaiduSearchPage
 from os.path import dirname, abspath
 
 base_path = dirname(dirname(abspath(__file__)))

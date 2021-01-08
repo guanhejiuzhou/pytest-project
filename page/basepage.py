@@ -55,8 +55,8 @@ class BasePage(object):
         :param locator:
         :return:
         """
-        id, value = locator
-        return func(rc.LOCATE_MODE[id], value)
+        name, value = locator
+        return func(rc.LOCATE_MODE[name], value)
 
     def find_element(self, locator):
         """
@@ -114,7 +114,7 @@ class BasePage(object):
         """
         文本框输入，写入文本
         :param locator:
-        :param txt:
+        :param text:
         :return:
         """
         ele = self.find_element(locator)

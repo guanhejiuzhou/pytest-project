@@ -2,3 +2,6 @@
 
 搜索框: "id==kw"
 搜索按钮: "id==su"
+设置下拉框: "link_text==设置"
+搜索设置选项: "css==.setpref"
+保存设置: "css==.prefpanelgo"

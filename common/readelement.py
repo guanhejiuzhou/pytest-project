@@ -31,3 +31,6 @@ if __name__ == '__main__':
     baidusearch = Element('baidusearch')
     print(baidusearch['搜索框'])
     print(baidusearch['搜索按钮'])
+    print(baidusearch['设置下拉框'])
+    print(baidusearch['搜索设置选项'])
+    print(baidusearch['保存设置'])
